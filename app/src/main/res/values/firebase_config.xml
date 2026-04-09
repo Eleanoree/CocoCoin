@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="firebase_project_id" translatable="false">cococoin-7af96</string>
-    <string name="firebase_application_id" translatable="false">1:739213606265:android:f4ad72ea9bfcef2cb683a8</string>
-    <string name="firebase_api_key" translatable="false">AIzaSyDHr3L-XM7fuRiFfS52R_9h9rqmV1k3P_w</string>
-    <string name="firebase_storage_bucket" translatable="false">cococoin-7af96.firebasestorage.app</string>
-</resources>

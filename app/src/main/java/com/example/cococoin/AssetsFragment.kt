@@ -103,7 +103,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
 
     // 載入所有資料（帳戶列表、當月預算）
     private fun loadAllData() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val now = Calendar.getInstance()
 
             // 從資料庫讀取帳戶列表（在背景執行）
@@ -118,6 +119,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
                     now.get(Calendar.MONTH) + 1
                 )
             }
+
+            if (view == null || !isAdded) return@launch
 
             // 更新暫存列表
             accountList.clear()
@@ -164,7 +167,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
         }
 
         // 儲存到資料庫
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val now = Calendar.getInstance()
             withContext(Dispatchers.IO) {
                 repository.saveMonthlyBudget(
@@ -173,6 +177,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
                     amount = budget
                 )
             }
+
+            if (view == null || !isAdded) return@launch
 
             // 更新畫面並顯示成功訊息
             showBudget(budget)
@@ -215,10 +221,13 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
         }
 
         // 儲存到資料庫
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 repository.addAccount(name, balance)
             }
+
+            if (view == null || !isAdded) return@launch
 
             Toast.makeText(
                 requireContext(),
@@ -273,7 +282,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
                 }
 
                 // 儲存修改
-                viewLifecycleOwner.lifecycleScope.launch {
+                val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return@setOnClickListener
+                lifecycleOwner.lifecycleScope.launch {
                     val result = withContext(Dispatchers.IO) {
                         repository.updateAccount(
                             accountId = account.id,
@@ -281,6 +291,8 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
                             newBalance = newBalance
                         )
                     }
+
+                    if (view == null || !isAdded) return@launch
 
                     Toast.makeText(
                         requireContext(),
@@ -305,10 +317,13 @@ class AssetsFragment : Fragment(R.layout.fragment_assets) {
             .setTitle("刪除帳戶")
             .setMessage("確定要刪除這個帳戶嗎？")
             .setPositiveButton("刪除") { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
+                val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return@setPositiveButton
+                lifecycleOwner.lifecycleScope.launch {
                     val result = withContext(Dispatchers.IO) {
                         repository.deleteAccount(accountId)
                     }
+
+                    if (view == null || !isAdded) return@launch
 
                     Toast.makeText(
                         requireContext(),

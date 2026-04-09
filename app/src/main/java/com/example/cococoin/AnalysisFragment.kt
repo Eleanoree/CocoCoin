@@ -239,10 +239,14 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
 
     // 載入交易資料並分析
     private fun loadTransactionsAndAnalyze() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val transactions = withContext(Dispatchers.IO) {
                 repository.getTransactions()
             }
+
+            if (view == null || !isAdded) return@launch
+
             allTransactions.clear()
             allTransactions.addAll(transactions)
             analyzeSelectedRange()
@@ -268,7 +272,8 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
         val endCopy = end.clone() as Calendar
         val transactionsSnapshot = allTransactions.toList()
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             if (showLoading) {
                 setAnalyzeLoading(true)  // 顯示 loading 動畫
             }
@@ -285,6 +290,8 @@ class AnalysisFragment : Fragment(R.layout.fragment_analysis) {
                         }
                     }
                 }
+
+                if (view == null || !isAdded) return@launch
 
                 currentFilteredTransactions = filtered
                 updateRangeSummary(filtered)      // 更新統計數字

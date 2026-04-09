@@ -170,10 +170,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         refreshSettings()  // 重新讀取資料並更新畫面
     }
 
+    // 只有在 Fragment 的 View 仍存在時才啟動協程，避免非同步 callback 回來時碰到已銷毀的畫面
+    private fun launchWhenViewActive(block: suspend () -> Unit) {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
+            block()
+        }
+    }
+
     // 更新畫面上的所有設定資訊
     private fun refreshSettings() {
         // 啟動一個協程（背景任務），避免卡住畫面
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
 
             // 從資料庫讀取帳本名稱（在背景執行緒執行，避免卡畫面）
             val bookName = withContext(Dispatchers.IO) {
@@ -370,7 +378,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     // 綁定 Google 帳號
     private fun linkGoogle() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = authLinkManager.linkGoogle(requireActivity())
             Toast.makeText(
                 requireContext(),
@@ -383,7 +391,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     // 用 Google 帳號登入
     private fun signInWithGoogle() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = authLinkManager.signInWithGoogle(requireActivity())
             if (!result.success) {
                 Toast.makeText(
@@ -392,7 +400,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     Toast.LENGTH_SHORT
                 ).show()
                 refreshSettings()
-                return@launch
+                return@launchWhenViewActive
             }
 
             restoreRemoteDataAfterLogin(result.message ?: "Google 登入成功")
@@ -401,7 +409,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     // 登入成功後，從雲端還原資料到本機
     private fun restoreRemoteDataAfterLogin(loginMessage: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val restoreResult = withContext(Dispatchers.IO) {
                 repository.restoreFromCloudAfterLogin()
             }
@@ -425,7 +433,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     // 立即備份到雲端
     private fun backupNow() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = withContext(Dispatchers.IO) {
                 repository.backupNow()
             }
@@ -465,7 +473,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         // 重新繪製分類列表（每次切換類型或新增/編輯/刪除後呼叫）
         fun render() {
-            viewLifecycleOwner.lifecycleScope.launch {
+            launchWhenViewActive {
                 // 從資料庫讀取所有分類
                 val allCategories = withContext(Dispatchers.IO) {
                     repository.getAllCategories()
@@ -654,7 +662,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 // 開啟協程（背景任務），避免卡住畫面
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道（專門做資料庫操作），執行儲存分類
                     val result = withContext(Dispatchers.IO) {
                         repository.upsertCategory(
@@ -672,7 +680,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                             result.message ?: "分類更新失敗",
                             Toast.LENGTH_SHORT
                         ).show()
-                        return@launch
+                        return@launchWhenViewActive
                     }
 
                     // 儲存成功，顯示成功訊息
@@ -732,7 +740,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setMessage("確定要刪除「${category.icon} ${category.name}」嗎？若已有交易使用此分類，系統會阻止刪除。")
             .setPositiveButton("刪除") { _, _ ->
                 // 開啟協程（背景任務）
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道，執行刪除分類
                     val result = withContext(Dispatchers.IO) {
                         repository.deleteCategory(type, category.name)
@@ -772,7 +780,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setView(input)
             .setPositiveButton("儲存") { _, _ ->
                 // 開啟協程（背景任務）
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道，更新帳本名稱
                     val result = withContext(Dispatchers.IO) {
                         repository.updateBookName(input.text.toString())
@@ -803,7 +811,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setMessage("登出後會清除目前裝置上的本機資料，之後可再透過 Google 重新登入找回雲端備份。")
             .setPositiveButton("登出") { _, _ ->
                 // 開啟協程（背景任務）
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道，執行登出並開始匿名 session
                     val result = withContext(Dispatchers.IO) {
                         repository.signOutAndStartAnonymousSession()
@@ -834,7 +842,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setMessage("這會清除目前裝置上的所有交易、帳戶與預算資料。若尚未備份到雲端，資料將無法復原。確定要繼續嗎？")
             .setPositiveButton("確認清除") { _, _ ->
                 // 開啟協程（背景任務）
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道，清除所有資料
                     withContext(Dispatchers.IO) {
                         repository.clearAllData()
@@ -870,7 +878,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     // 實際執行匯出備份（把資料寫到指定的 URI） ：
     // 把資料庫的內容轉成 JSON 格式，然後寫到使用者選的那個檔案裡
     private fun exportBackupToUri(uri: Uri) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = withContext(Dispatchers.IO) {
                 // runCatching 像一個防護罩，如果有錯誤可以抓下來不讓 App 當機
                 runCatching {
@@ -916,7 +924,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
 
         // 開啟協程（背景任務）
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             // 切換到 IO 跑道，儲存使用者的選擇
             val result = withContext(Dispatchers.IO) {
                 repository.configureAutoLocalBackupFolder(uri)
@@ -950,7 +958,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     // 實際執行匯出 CSV ：
     // 把交易紀錄轉成 CSV 格式（用逗號分隔的表格），然後寫到使用者選的檔案裡
     private fun exportCsvToUri(uri: Uri) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
                     // 從資料庫讀取交易紀錄並轉成 CSV 格式
@@ -989,7 +997,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setMessage("停用後將不再自動更新備份檔，但已經匯出的檔案不會被刪除。")
             .setPositiveButton("停用") { _, _ ->
                 // 開啟協程（背景任務）
-                viewLifecycleOwner.lifecycleScope.launch {
+                launchWhenViewActive {
                     // 切換到 IO 跑道，停用自動備份
                     val result = withContext(Dispatchers.IO) {
                         repository.disableAutoLocalBackup()
@@ -1025,7 +1033,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     // 實際執行匯入備份（從 JSON 檔案讀取資料並寫入資料庫）
     private fun importBackupFromUri(uri: Uri) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchWhenViewActive {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
                     // 讀取使用者選的檔案內容

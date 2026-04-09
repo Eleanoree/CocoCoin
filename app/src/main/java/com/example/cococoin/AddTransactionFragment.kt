@@ -203,10 +203,13 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         type: String,
         selectedName: String? = null
     ) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val categories = withContext(Dispatchers.IO) {
                 repository.getCategories(type)
             }
+
+            if (view == null || !isAdded) return@launch
 
             currentCategories = categories
             // 把分類轉成「🍽 餐飲」這樣的顯示文字
@@ -232,10 +235,13 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
 
     // 載入帳戶下拉選單
     private fun loadAccountsToDropdown() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val accounts = withContext(Dispatchers.IO) {
                 repository.getAccounts()
             }
+
+            if (view == null || !isAdded) return@launch
 
             accountList.clear()
             accountList.addAll(accounts)
@@ -355,7 +361,8 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         }
 
         // 6.儲存到資料庫
-        viewLifecycleOwner.lifecycleScope.launch {
+        val lifecycleOwner = viewLifecycleOwnerLiveData.value ?: return
+        lifecycleOwner.lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 repository.addTransaction(
                     type = type,
@@ -366,6 +373,8 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
                     accountName = accountName
                 )
             }
+
+            if (view == null || !isAdded) return@launch
 
             Toast.makeText(
                 requireContext(),

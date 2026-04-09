@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    每日明細項目（簡化版，用於統計分類）
+    例如：餐飲 總共花了 $5,000
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_analysis_list_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <!--
+            android:layout_weight="1":
+            佔掉剩下的所有空間 讓金額永遠乖乖待在最右邊
+        -->
+        <TextView
+            android:id="@+id/tvDailyDetailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加油"
+            android:textColor="#1E1E2A"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDailyDetailSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="交通 ・ 現金"
+            android:textColor="#8C8B97"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDailyDetailAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="-NT$ 125"
+        android:textColor="#C62828"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    manifest 是整個檔案的最外層標籤，裡面放 App 需要的「權限申請」和「App 本體設定」
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        向手機申請「使用網路的權限」
+        如果 App 要從網路抓匯率、上傳記帳備份到雲端等，沒有這行，手機就會擋下來不給連線。
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        application 標籤：App 的「核心設定區」
+        裡面放 App 名稱、圖示、主題顏色、第一個畫面等。
+    -->
+    <application
+        android:name=".CocoCoinApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CocoCoin">
+
+        <!--
+            activity 標籤：代表 App 的「其中一個畫面」
+            這邊只設定了一個畫面 MainActivity（主畫面）
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <!--
+                intent-filter 像是一個「門鈴或入口標示」
+                告訴手機：「當使用者點擊 App 圖示時，該開哪一扇門？」
+            -->
+            <intent-filter>
+                <!--
+                    MAIN 動作：表示這是 App 的主要進入點（起點）
+                    沒有這組設定，App 安裝後不會出現在桌面，無法正常啟動
+                -->
+                <action android:name="android.intent.action.MAIN" />
+
+                <!--
+                    LAUNCHER 類別：表示這個 App 應該出現在手機的「應用程式抽屜」，
+                    並且可以被使用者點擊啟動。
+                    沒有這個，App 安裝後會像隱形人，找不到圖示可以按。
+                -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

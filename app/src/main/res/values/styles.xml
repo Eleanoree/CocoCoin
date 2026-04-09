@@ -1,0 +1,119 @@
+<resources>
+    <!--
+        文字的濾鏡或範本
+        設定好一次，到處都能套用
+    -->
+
+    <!-- 基礎樣式（ -->
+    <style name="TextAppearance" />
+    <!-- CocoCoin 專用的文字樣式家族 -->
+    <style name="TextAppearance.CocoCoin" />
+
+    <!--  頁面標題 -->
+    <style name="TextAppearance.CocoCoin.PageTitle">
+        <item name="android:textSize">28sp</item>   <!-- 字很大，像報紙頭條 -->
+        <item name="android:textStyle">bold</item>  <!-- 粗體 -->
+        <item name="android:textColor">#1E1E2A</item> <!-- 深灰藍色 -->
+    </style>
+
+    <!--  頁面副標題 -->
+    <style name="TextAppearance.CocoCoin.PageSubtitle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#8C8B97</item> <!-- 淺灰色，較低調 -->
+    </style>
+
+    <!-- 卡片大標題 -->
+    <style name="TextAppearance.CocoCoin.CardTitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 卡片一般標題 -->
+    <style name="TextAppearance.CocoCoin.CardTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 徽章文字 -->
+    <style name="TextAppearance.CocoCoin.Badge">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#A65B34</item> <!-- 橘褐色 -->
+    </style>
+
+    <!-- 後設標籤（例如「建立於 2025-04-03」） -->
+    <style name="TextAppearance.CocoCoin.MetaLabel">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#9A8F87</item> <!-- 暖灰色 -->
+    </style>
+
+    <!-- 輔助說明文字 -->
+    <style name="TextAppearance.CocoCoin.SupportText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#8C8B97</item>
+    </style>
+
+    <!--  內文 -->
+    <style name="TextAppearance.CocoCoin.Body">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#5D5651</item>
+    </style>
+
+    <!-- 粗體內文 -->
+    <style name="TextAppearance.CocoCoin.BodyStrong">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#4C4642</item>
+    </style>
+
+    <!--  超級數字 -->
+    <style name="TextAppearance.CocoCoin.MetricHero">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 大數字指標 -->
+    <style name="TextAppearance.CocoCoin.MetricLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 中數字指標 -->
+    <style name="TextAppearance.CocoCoin.MetricMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 按鈕文字 -->
+    <style name="TextAppearance.CocoCoin.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>      <!-- 不強制全大寫 -->
+        <item name="android:letterSpacing">0.01</item>    <!-- 微調字距 -->
+    </style>
+
+    <!-- 導覽列標籤 -->
+    <style name="TextAppearance.CocoCoin.NavLabel">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 列表項目標題 -->
+    <style name="TextAppearance.CocoCoin.ListTitle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1E1E2A</item>
+    </style>
+
+    <!-- 標籤文字（例如「飲食」「交通」分類） -->
+    <style name="TextAppearance.CocoCoin.Tag">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

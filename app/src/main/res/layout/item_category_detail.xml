@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    每日明細項目:
+    「某一天的交易清單」或「明細頁面」
+    左邊有一個圓角日期標籤
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_analysis_list_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/tvDetailDate"
+        android:layout_width="58dp"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_analysis_date_chip"
+        android:gravity="center"
+        android:text="3/1"
+        android:textColor="#A65B34"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvDetailTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:text="加油"
+        android:textColor="#1E1E2A"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvDetailAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NT$ 125"
+        android:textColor="#C62828"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</LinearLayout>

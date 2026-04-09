@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    「資產頁面」中 每個帳戶的顯示 + 編輯/刪除按鈕
+    例如：國泰銀行  NT$20,000  [編輯] [刪除]
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_analysis_list_item"
+    android:gravity="center_vertical"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvAccountIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_account_icon_badge"
+            android:gravity="center"
+            android:text="銀"
+            android:textColor="#6F665F"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAccountName"
+            style="@style/TextAppearance.CocoCoin.ListTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="國泰銀行"
+            android:textColor="#1E1E2A"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="10sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAccountBalance"
+        style="@style/TextAppearance.CocoCoin.Tag"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_analysis_date_chip"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="NT$ 20000"
+        android:textColor="#2E7D32"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/btnEditAccount"
+        style="@style/TextAppearance.CocoCoin.Tag"
+        android:layout_width="44dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_assets_edit_button"
+        android:gravity="center"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:text="編輯"
+        android:textColor="#6B625D"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/btnDeleteAccount"
+        style="@style/TextAppearance.CocoCoin.Tag"
+        android:layout_width="44dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/bg_assets_delete_button"
+        android:gravity="center"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:text="刪除"
+        android:textColor="#B64F44"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+</LinearLayout>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    編輯交易對話框：讓使用者修改一筆交易的內容
+    乾淨無紫色、無模糊背景
+-->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- 標題列 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/TextAppearance.CocoCoin.CardTitleLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="編輯交易"
+                android:textColor="#1E1E2A"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- 關閉按鈕 -->
+        </LinearLayout>
+
+        <!-- 分隔線（乾淨的一條線） -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:background="#EEEEEE" />
+
+        <!-- 分類下拉選單（乾淨背景，無模糊） -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="選擇分類"
+            android:textColorHint="#B0A9A2"
+            app:boxStrokeColor="#D4C9BE"
+            app:boxStrokeWidth="1dp"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="#9A8F87"
+            app:hintTextColor="#9A8F87">
+
+            <AutoCompleteTextView
+                android:id="@+id/actEditCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="none"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textColor="#2E2A2A"
+                android:textSize="15sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 金額輸入框 -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="金額"
+            android:textColorHint="#B0A9A2"
+            app:boxStrokeColor="#D4C9BE"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#9A8F87">
+
+            <EditText
+                android:id="@+id/etAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textColor="#2E2A2A"
+                android:textColorHint="#B0A9A2"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 備註輸入框 -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="備註（選填）"
+            android:textColorHint="#B0A9A2"
+            app:boxStrokeColor="#D4C9BE"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#9A8F87">
+
+            <EditText
+                android:id="@+id/etNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="3"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textColor="#2E2A2A"
+                android:textColorHint="#B0A9A2"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 時間選擇器（可點擊，乾淨無背景色塊） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_record_date_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_my_calendar"
+                android:tint="#A65B34"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                style="@style/TextAppearance.CocoCoin.MetaLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="時間"
+                android:textColor="#9A8F87"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvEditTime"
+                style="@style/TextAppearance.CocoCoin.Body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="2026/03/05 12:00"
+                android:textColor="#3A3A48"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="›"
+                android:textColor="#B7A79B"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 帳戶下拉選單 -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="選擇帳戶"
+            android:textColorHint="#B0A9A2"
+            app:boxStrokeColor="#D4C9BE"
+            app:boxStrokeWidth="1dp"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="#9A8F87"
+            app:hintTextColor="#9A8F87">
+
+            <AutoCompleteTextView
+                android:id="@+id/actEditAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="none"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textColor="#2E2A2A"
+                android:textSize="15sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 儲存按鈕（溫暖橘褐色，不是紫色） -->
+        <Button
+            android:id="@+id/btnSave"
+            style="@style/TextAppearance.CocoCoin.Button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="28dp"
+            android:backgroundTint="#977272"
+            android:text="儲存修改"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

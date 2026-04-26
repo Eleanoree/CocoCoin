@@ -356,13 +356,6 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="會依日期列出該分類在這段期間的每一筆支出。"
-                        android:textColor="#8C8B97"
-                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -560,13 +553,6 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="會把當天的收入、支出與交易項目集中顯示在這裡。"
-                        android:textColor="#8C8B97"
-                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout

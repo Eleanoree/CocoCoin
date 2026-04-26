@@ -288,6 +288,51 @@
                     app:backgroundTint="@null" />
 
                 <Button
+                    android:id="@+id/btnEmailAccountAction"
+                    style="@style/TextAppearance.CocoCoin.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_settings_button_secondary"
+                    android:backgroundTint="@null"
+                    android:text="綁定信箱"
+                    android:textAllCaps="false"
+                    android:textColor="#6E564F"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <Button
+                    android:id="@+id/btnUnlinkGoogleAction"
+                    style="@style/TextAppearance.CocoCoin.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_settings_button_subtle_danger"
+                    android:backgroundTint="@null"
+                    android:text="解除綁定 Google"
+                    android:textAllCaps="false"
+                    android:textColor="#8A4F45"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <Button
+                    android:id="@+id/btnUnlinkEmailAction"
+                    style="@style/TextAppearance.CocoCoin.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_settings_button_subtle_danger"
+                    android:backgroundTint="@null"
+                    android:text="解除綁定信箱"
+                    android:textAllCaps="false"
+                    android:textColor="#8A4F45"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <Button
                     android:id="@+id/btnBackupNow"
                     style="@style/TextAppearance.CocoCoin.Button"
                     android:layout_width="match_parent"

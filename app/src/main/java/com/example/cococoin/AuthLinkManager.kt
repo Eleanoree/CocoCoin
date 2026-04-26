@@ -108,6 +108,7 @@ class AuthLinkManager(
         // 把憑證綁定到目前的使用者
         user.linkWithCredential(credential)
             .addOnSuccessListener {
+                auth.setLanguageCode(AUTH_EMAIL_LANGUAGE_CODE)
                 user.sendEmailVerification()
                     .addOnSuccessListener {
                         syncStatusStore.markAuthState(firebaseConfigured = true, uid = user.uid)
@@ -138,12 +139,60 @@ class AuthLinkManager(
             return
         }
 
+        auth.setLanguageCode(AUTH_EMAIL_LANGUAGE_CODE)
         user.sendEmailVerification()
             .addOnSuccessListener {
                 onComplete(OperationResult.ok("驗證信已重新寄出，請到信箱完成驗證"))
             }
             .addOnFailureListener { exception ->
                 onComplete(OperationResult.fail(exception.message ?: "驗證信寄送失敗"))
+            }
+    }
+
+    fun unlinkEmailProvider(onComplete: (OperationResult) -> Unit) {
+        unlinkProvider(
+            providerId = EmailAuthProvider.PROVIDER_ID,
+            providerName = "信箱",
+            onComplete = onComplete
+        )
+    }
+
+    fun unlinkGoogleProvider(onComplete: (OperationResult) -> Unit) {
+        unlinkProvider(
+            providerId = GoogleAuthProvider.PROVIDER_ID,
+            providerName = "Google",
+            onComplete = onComplete
+        )
+    }
+
+    private fun unlinkProvider(
+        providerId: String,
+        providerName: String,
+        onComplete: (OperationResult) -> Unit
+    ) {
+        val auth = getAuthOrNull()
+            ?: return onComplete(OperationResult.fail("Firebase Auth 尚未初始化"))
+        val user = auth.currentUser
+            ?: return onComplete(OperationResult.fail("目前沒有已登入帳號"))
+
+        val status = getStatus()
+        val hasProvider = when (providerId) {
+            EmailAuthProvider.PROVIDER_ID -> status.hasEmailProvider
+            GoogleAuthProvider.PROVIDER_ID -> status.hasGoogleProvider
+            else -> false
+        }
+        if (!hasProvider) {
+            onComplete(OperationResult.fail("此帳號尚未綁定 $providerName"))
+            return
+        }
+
+        user.unlink(providerId)
+            .addOnSuccessListener {
+                syncStatusStore.markAuthState(firebaseConfigured = true, uid = user.uid)
+                onComplete(OperationResult.ok("已解除綁定 $providerName"))
+            }
+            .addOnFailureListener { exception ->
+                onComplete(OperationResult.fail(exception.message ?: "解除綁定 $providerName 失敗"))
             }
     }
 
@@ -380,5 +429,9 @@ class AuthLinkManager(
         if (resourceId == 0) return null
 
         return appContext.getString(resourceId).takeIf { it.isNotBlank() }
+    }
+
+    companion object {
+        private const val AUTH_EMAIL_LANGUAGE_CODE = "zh-TW"
     }
 }

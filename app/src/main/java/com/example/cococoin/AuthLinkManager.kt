@@ -1,3 +1,18 @@
+// ============================================================
+// 🔐 帳號連結管理器 — 白話文：雲端登入服務台的「櫃檯人員」
+// ============================================================
+// 
+// 情境劇：想像你走進一間大樓的服務台，櫃檯人員可以幫你處理：
+//           🎫 發放訪客證（匿名登入）
+//           🪪 升級成正式會員卡（綁定 Email/Google）
+//           🔓 用會員卡登入（Email/Google 登入）
+//           🔗 綁定多種登入方式（例如同時綁 Email 和 Google）
+//           🔓 解除綁定（不再用某種方式登入）
+//           🚪 辦理離開（登出）
+//
+// 這個 AuthLinkManager 就是那位「櫃檯人員」！
+// 所有跟帳號有關的操作（登入、登出、綁定、解除綁定）都找它
+// ============================================================
 package com.example.cococoin
 
 import android.app.Activity
@@ -11,29 +26,31 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 
-// 帳號連結管理器：
-// 負責處理 Firebase 的登入、登出、綁定 Email/Google 帳號
-// 支援匿名登入（不用註冊就能用雲端備份），也支援升級成正式帳號
 class AuthLinkManager(
     context: Context
 ) {
-    // 使用 Application Context（避免記憶體洩漏）
+    // 使用 Application Context（避免記憶體洩漏，App 關閉才消失）
     private val appContext = context.applicationContext
 
-    // 同步狀態儲存器（記錄登入狀態）
+    // 同步狀態儲存器（記錄「現在誰登入了？」）
     private val syncStatusStore = SyncStatusStore(appContext)
 
-    // 取得目前的帳號連結狀態：
-    // 檢查 Firebase 是否可用、使用者有沒有登入、是匿名還是正式、綁了哪些登入方式
+    // ============================================================
+    // 📋 取得目前的帳號連結狀態 — 白話文：看看現在誰在裡面？
+    // ============================================================
+    // 這張報告會告訴你：
+    //   - Firebase 準備好了沒？
+    //   - 有沒有人登入？
+    //   - 是訪客還是正式會員？
+    //   - 綁了哪些登入方式（Email、Google）？
     fun getStatus(): AuthLinkStatus {
-        // 檢查 Firebase 是否可用
+        // 第一步：檢查 Firebase 能不能用
         if (!FirebaseInitializer.canUseFirebase(appContext)) {
             return AuthLinkStatus(
                 isFirebaseReady = false,
@@ -47,12 +64,13 @@ class AuthLinkManager(
             )
         }
 
-        // 取得 FirebaseAuth 實例和當前使用者
+        // 第二步：取得 FirebaseAuth 實例和目前登入的使用者
         val auth = runCatching { FirebaseAuth.getInstance() }.getOrNull()
         val user = auth?.currentUser
 
-        // 取得使用者已綁定的登入方式（providerId 列表）：
+        // 第三步：取得使用者已綁定的登入方式（providerId 列表）
         // 過濾掉 "firebase" 這個內部 provider，只留下 "google.com"、"password" 等
+        // 白話文：使用者是用什麼方式登入的？Google？Email？還是訪客？
         val providerIds = user?.providerData
             ?.mapNotNull { provider -> provider.providerId }
             ?.filter { it != "firebase" }
@@ -61,7 +79,7 @@ class AuthLinkManager(
         return AuthLinkStatus(
             isFirebaseReady = auth != null,
             isSignedIn = user != null,
-            isAnonymous = user?.isAnonymous ?: true,  // 沒登入或匿名都算匿名
+            isAnonymous = user?.isAnonymous ?: true,  // 沒登入或匿名都算訪客模式
             uid = user?.uid,
             email = user?.email,
             hasEmailProvider = providerIds.contains(EmailAuthProvider.PROVIDER_ID),  // "password"
@@ -70,12 +88,19 @@ class AuthLinkManager(
         )
     }
 
+    // ============================================================
+    // 🔄 取得最新的帳號狀態（強制刷新）— 白話文：去雲端確認一下再回來
+    // ============================================================
+    // 一般的 getStatus() 只讀本機快取的資料
+    // 這個函式會先呼叫 user.reload() 從 Firebase 雲端重新載入使用者資料
+    // 確保拿到的是最新狀態（例如 Email 驗證狀態可能在其他裝置改了）
     suspend fun getFreshStatus(): AuthLinkStatus {
         val auth = getAuthOrNull() ?: return getStatus()
         val user = auth.currentUser
         if (user != null) {
+            // 掛起函式：等 Firebase 回傳結果才繼續
             suspendCancellableCoroutine<Unit> { continuation ->
-                user.reload()
+                user.reload()  // 從雲端重新載入使用者資料
                     .addOnCompleteListener {
                         continuation.resume(Unit)
                     }
@@ -84,8 +109,12 @@ class AuthLinkManager(
         return getStatus()
     }
 
-    // 綁定 Email 登入方式（非掛起函式，用 callback 回傳）：
-    // 把 Email 和密碼綁定到目前的匿名帳號，這樣之後就能用 Email 登入
+    // ============================================================
+    // 📧 綁定 Email 登入方式 — 白話文：用 Email + 密碼升級成正式會員
+    // ============================================================
+    // 這個函式給「匿名登入」的使用者使用
+    // 讓他們輸入 Email 和密碼，把目前的訪客帳號升級成正式會員
+    // 之後就可以用 Email 登入，資料也不會消失了！
     fun linkEmailPassword(
         email: String,
         password: String,
@@ -96,59 +125,30 @@ class AuthLinkManager(
         val user = auth.currentUser
             ?: return onComplete(OperationResult.fail("目前沒有可綁定的登入帳號"))
 
-        // 檢查是否已經綁定過 Email
+        // 檢查是否已經綁定過 Email（避免重複綁定）
         if (getStatus().hasEmailProvider) {
             onComplete(OperationResult.fail("此帳號已綁定 Email"))
             return
         }
 
         // 建立 Email 憑證
-        val credential = EmailAuthProvider.getCredential(email, password)
+        val credential = EmailAuthProvider.getCredential(email.trim(), password)
 
-        // 把憑證綁定到目前的使用者
+        // 把憑證綁定到目前的使用者帳號
         user.linkWithCredential(credential)
             .addOnSuccessListener {
-                auth.setLanguageCode(AUTH_EMAIL_LANGUAGE_CODE)
-                user.sendEmailVerification()
-                    .addOnSuccessListener {
-                        syncStatusStore.markAuthState(firebaseConfigured = true, uid = user.uid)
-                        onComplete(OperationResult.ok("已寄出驗證信，請收信完成驗證後再回到 App"))
-                    }
-                    .addOnFailureListener { exception ->
-                        onComplete(OperationResult.fail(exception.message ?: "驗證信寄送失敗"))
-                    }
+                // 綁定成功！記錄狀態
+                syncStatusStore.markAuthState(firebaseConfigured = true, uid = user.uid)
+                onComplete(OperationResult.ok("信箱綁定成功"))
             }
             .addOnFailureListener { exception ->
                 onComplete(OperationResult.fail(mapLinkError(exception, "Email 綁定失敗")))
             }
     }
 
-    fun sendEmailVerification(onComplete: (OperationResult) -> Unit) {
-        val auth = getAuthOrNull()
-            ?: return onComplete(OperationResult.fail("Firebase Auth 尚未初始化"))
-        val user = auth.currentUser
-            ?: return onComplete(OperationResult.fail("目前沒有可驗證的帳號"))
-
-        if (!getStatus().hasEmailProvider) {
-            onComplete(OperationResult.fail("目前帳號尚未綁定 Email"))
-            return
-        }
-
-        if (user.isEmailVerified) {
-            onComplete(OperationResult.ok("這個 Email 已完成驗證"))
-            return
-        }
-
-        auth.setLanguageCode(AUTH_EMAIL_LANGUAGE_CODE)
-        user.sendEmailVerification()
-            .addOnSuccessListener {
-                onComplete(OperationResult.ok("驗證信已重新寄出，請到信箱完成驗證"))
-            }
-            .addOnFailureListener { exception ->
-                onComplete(OperationResult.fail(exception.message ?: "驗證信寄送失敗"))
-            }
-    }
-
+    // ============================================================
+    // 🔓 解除綁定 Email 登入方式 — 白話文：不能再使用 Email 登入這帳號
+    // ============================================================
     fun unlinkEmailProvider(onComplete: (OperationResult) -> Unit) {
         unlinkProvider(
             providerId = EmailAuthProvider.PROVIDER_ID,
@@ -157,6 +157,9 @@ class AuthLinkManager(
         )
     }
 
+    // ============================================================
+    // 🔓 解除綁定 Google 登入方式 — 白話文：不能再使用 Google 登入這帳號
+    // ============================================================
     fun unlinkGoogleProvider(onComplete: (OperationResult) -> Unit) {
         unlinkProvider(
             providerId = GoogleAuthProvider.PROVIDER_ID,
@@ -165,6 +168,9 @@ class AuthLinkManager(
         )
     }
 
+    // ============================================================
+    // 🔓 解除綁定的通用函式 — 白話文：解除綁定的標準流程
+    // ============================================================
     private fun unlinkProvider(
         providerId: String,
         providerName: String,
@@ -175,6 +181,7 @@ class AuthLinkManager(
         val user = auth.currentUser
             ?: return onComplete(OperationResult.fail("目前沒有已登入帳號"))
 
+        // 檢查是否真的綁定過（避免解除不存在的綁定）
         val status = getStatus()
         val hasProvider = when (providerId) {
             EmailAuthProvider.PROVIDER_ID -> status.hasEmailProvider
@@ -186,6 +193,7 @@ class AuthLinkManager(
             return
         }
 
+        // 執行解除綁定
         user.unlink(providerId)
             .addOnSuccessListener {
                 syncStatusStore.markAuthState(firebaseConfigured = true, uid = user.uid)
@@ -196,8 +204,11 @@ class AuthLinkManager(
             }
     }
 
-    // 綁定 Google 登入方式（掛起函式，可用協程等待）：
-    // 跳出 Google 帳號選擇畫面，讓使用者選要綁定的 Google 帳號
+    // ============================================================
+    // 🔴 綁定 Google 登入方式 — 白話文：用 Google 帳號升級成正式會員
+    // ============================================================
+    // 這個函式會跳出 Google 帳號選擇畫面
+    // 使用者選中一個 Google 帳號後，會綁定到目前的 Firebase 帳號
     suspend fun linkGoogle(activity: Activity): OperationResult {
         val auth = getAuthOrNull() ?: return OperationResult.fail("Firebase Auth 尚未初始化")
         val user = auth.currentUser ?: return OperationResult.fail("目前沒有可綁定的登入帳號")
@@ -207,27 +218,27 @@ class AuthLinkManager(
             return OperationResult.fail("此帳號已綁定 Google")
         }
 
-        // 取得 Google 的 Web Client ID（從 strings.xml）
+        // 取得 Google 的 Web Client ID（從 google-services.json 生成的 strings.xml）
         val serverClientId = getDefaultWebClientId()
             ?: return OperationResult.fail("找不到 default_web_client_id，請重新下載 google-services.json")
 
         return try {
-            // 1.建立 Google 登入選項
+            // 1. 建立 Google 登入選項
             val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(serverClientId)
                 .build()
 
-            // 2.建立請求
+            // 2. 建立請求（跟 Google 說「我要登入」）
             val request = GetCredentialRequest.Builder()
                 .addCredentialOption(signInWithGoogleOption)
                 .build()
 
-            // 3.跳出 Google 帳號選擇器，讓使用者選擇
+            // 3. 跳出 Google 帳號選擇器，讓使用者選帳號
             val result = CredentialManager.create(activity).getCredential(
                 context = activity,
                 request = request
             )
 
-            // 4.解析 Google 回傳的憑證
+            // 4. 解析 Google 回傳的憑證
             val credential = result.credential
             if (
                 credential is CustomCredential &&
@@ -239,13 +250,13 @@ class AuthLinkManager(
                     null
                 )
 
-                // 5.綁定到 Firebase
+                // 5. 綁定到 Firebase
                 linkWithCredentialSuspend(user, firebaseCredential)
             } else {
                 OperationResult.fail("Google 憑證格式不正確")
             }
         } catch (_: GetCredentialCancellationException) {
-            // 使用者取消選擇
+            // 使用者按了取消，不是錯誤，只是不想綁定
             OperationResult.fail("已取消 Google 綁定")
         } catch (exception: GetCredentialException) {
             OperationResult.fail(
@@ -279,7 +290,9 @@ class AuthLinkManager(
             }
     }
 
-    // 用 Email 登入（非掛起函式，用 callback 回傳）
+    // ============================================================
+    // 📧 用 Email 登入 — 白話文：用 Email + 密碼登入既有帳號
+    // ============================================================
     fun signInWithEmailPassword(
         email: String,
         password: String,
@@ -302,6 +315,9 @@ class AuthLinkManager(
             }
     }
 
+    // ============================================================
+    // 📧 寄送重設密碼信 — 白話文：忘記密碼？去信箱收信重置
+    // ============================================================
     fun sendPasswordResetEmail(
         email: String,
         onComplete: (OperationResult) -> Unit
@@ -309,6 +325,7 @@ class AuthLinkManager(
         val auth = getAuthOrNull()
             ?: return onComplete(OperationResult.fail("Firebase Auth 尚未初始化"))
 
+        // 先檢查這個 Email 是否已經註冊過
         auth.fetchSignInMethodsForEmail(email.trim())
             .addOnSuccessListener { result ->
                 val hasPasswordAccount =
@@ -318,6 +335,7 @@ class AuthLinkManager(
                     return@addOnSuccessListener
                 }
 
+                // 有註冊過，寄送重設密碼信
                 auth.sendPasswordResetEmail(email.trim())
                     .addOnSuccessListener {
                         onComplete(OperationResult.ok("已寄出重設密碼信，請到信箱開啟連結設定新密碼"))
@@ -331,8 +349,11 @@ class AuthLinkManager(
             }
     }
 
-    // 用 Google 登入（掛起函式）：
-    // 跳出 Google 帳號選擇畫面，用選中的帳號登入
+    // ============================================================
+    // 🔴 用 Google 登入 — 白話文：用 Google 帳號登入既有帳號
+    // ============================================================
+    // 這個函式會跳出 Google 帳號選擇畫面
+    // 使用者選中一個 Google 帳號後，會用那個帳號登入 Firebase
     suspend fun signInWithGoogle(activity: Activity): OperationResult {
         val auth = getAuthOrNull() ?: return OperationResult.fail("Firebase Auth 尚未初始化")
 
@@ -359,27 +380,27 @@ class AuthLinkManager(
         }
     }
 
+    // ============================================================
+    // 🔧 內部輔助函式們 — 白話文：櫃檯人員的工具箱
+    // ============================================================
+
     // 取得 Google 登入憑證（內部輔助函式）
     private suspend fun getGoogleCredential(activity: Activity): AuthCredential? {
         val serverClientId = getDefaultWebClientId() ?: return null
 
         return try {
-            // 建立 Google 登入選項
             val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(serverClientId)
                 .build()
 
-            // 建立請求
             val request = GetCredentialRequest.Builder()
                 .addCredentialOption(signInWithGoogleOption)
                 .build()
 
-            // 跳出 Google 帳號選擇器
             val result = CredentialManager.create(activity).getCredential(
                 context = activity,
                 request = request
             )
 
-            // 解析憑證
             val credential = result.credential
             if (
                 credential is CustomCredential &&
@@ -391,12 +412,11 @@ class AuthLinkManager(
                 null
             }
         } catch (_: GetCredentialCancellationException) {
-            // 使用者取消
-            null
+            null  // 使用者取消
         } catch (_: GetCredentialException) {
-            null
+            null  // 取得憑證失敗
         } catch (_: Exception) {
-            null
+            null  // 其他錯誤
         }
     }
 
@@ -404,9 +424,8 @@ class AuthLinkManager(
     private fun mapLinkError(exception: Exception, fallback: String): String {
         return when (exception) {
             // 帳號衝突：這個 Email/Google 已經綁定到其他 Firebase 帳號了
-            is FirebaseAuthUserCollisionException -> {
-                "這個登入方式已綁定到其他帳號，不能直接綁到目前匿名帳號"
-            }
+            is com.google.firebase.auth.FirebaseAuthUserCollisionException ->
+                "帳號已綁定"
             else -> exception.message ?: fallback
         }
     }
@@ -419,7 +438,8 @@ class AuthLinkManager(
         return runCatching { FirebaseAuth.getInstance() }.getOrNull()
     }
 
-    // 取得 Google 的 Web Client ID（從 strings.xml）：Google 用來識別 App 用的
+    // 取得 Google 的 Web Client ID（從 strings.xml）
+    // 這個 ID 是 Google 用來識別 App 用的，在 google-services.json 裡會自動產生
     private fun getDefaultWebClientId(): String? {
         val resourceId = appContext.resources.getIdentifier(
             "default_web_client_id",
@@ -429,9 +449,5 @@ class AuthLinkManager(
         if (resourceId == 0) return null
 
         return appContext.getString(resourceId).takeIf { it.isNotBlank() }
-    }
-
-    companion object {
-        private const val AUTH_EMAIL_LANGUAGE_CODE = "zh-TW"
     }
 }

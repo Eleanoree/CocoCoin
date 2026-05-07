@@ -1,119 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        文字的濾鏡或範本
-        設定好一次，到處都能套用
+        🎨【文字的濾鏡或範本 - CocoCoin 的服裝設計指南】
+
+        想像你開了一間「CocoCoin 時尚咖啡廳」，
+        所有員工（文字）都要穿統一的制服：
+
+        ┌─────────────────────────────────────────────────────────┐
+        │                 👔 CocoCoin 制服規定                     │
+        ├─────────────────────────────────────────────────────────┤
+        │                                                          │
+        │  📰 店長（頁面標題）：28sp 粗體 深藍色                   │
+        │  📋 副店長（副標題）：14sp 淺灰色                        │
+        │  💳 櫃檯人員（卡片標題）：20sp 粗體 深藍色               │
+        │  🏷️ 名牌（徽章）：12sp 粗體 橘褐色                      │
+        │  📝 菜單內文（一般文字）：14sp 咖啡色                    │
+        │  💰 價格牌（大數字）：30sp 粗體 深藍色                   │
+        │  🔘 按鈕：15sp 粗體 字距微調                            │
+        │                                                          │
+        └─────────────────────────────────────────────────────────┘
+
+        好處：
+        1️⃣ 設定好一次，到處都能套用（不用每個 TextView 都寫一堆屬性）
+        2️⃣ 修改設計時只要改這裡，整個 App 的文字一起變
+        3️⃣ 保持整個 App 的視覺一致性（不會這裡字大、那裡字小）
+        4️⃣ 設計師和工程師可以分開工作（設計師改 XML，工程師不用動程式碼）
     -->
 
-    <!-- 基礎樣式（ -->
+    <!--
+        🧬【基礎樣式（祖師爺）】
+
+        就像生物的「界門綱目科屬種」分類法：
+        TextAppearance 是最上層的「界」，所有樣式都是從它衍生出來的
+    -->
     <style name="TextAppearance" />
-    <!-- CocoCoin 專用的文字樣式家族 -->
+
+    <!--
+        🏠【CocoCoin 專用的文字樣式家族】
+
+        這是我們咖啡廳自己的「品牌系列」
+        所有 CocoCoin 的樣式都繼承這個，方便統一管理
+    -->
     <style name="TextAppearance.CocoCoin" />
 
-    <!--  頁面標題 -->
+    <!-- ========== 📰 頁面標題（店長級） ========== -->
+
+    <!--
+        🏷️ 頁面標題
+        📍 使用位置：每個頁面最上方的大標題
+        🎯 例如：「記帳本」、「資產管理」、「分析報表」
+    -->
     <style name="TextAppearance.CocoCoin.PageTitle">
-        <item name="android:textSize">28sp</item>   <!-- 字很大，像報紙頭條 -->
-        <item name="android:textStyle">bold</item>  <!-- 粗體 -->
-        <item name="android:textColor">#1E1E2A</item> <!-- 深灰藍色 -->
+        <item name="android:textSize">28sp</item>   <!-- 28sp：字很大，像報紙頭條 -->
+        <item name="android:textStyle">bold</item>  <!-- 粗體：看起來有份量 -->
+        <item name="android:textColor">#1E1E2A</item> <!-- 深灰藍色：專業穩重 -->
     </style>
 
-    <!--  頁面副標題 -->
+    <!-- ========== 📋 頁面副標題（副店長級） ========== -->
+
+    <!--
+        🏷️ 頁面副標題
+        📍 使用位置：頁面標題下方的小說明
+        🎯 例如：「總資產」、「本月結餘」
+    -->
     <style name="TextAppearance.CocoCoin.PageSubtitle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#8C8B97</item> <!-- 淺灰色，較低調 -->
     </style>
 
-    <!-- 卡片大標題 -->
+    <!-- ========== 💳 卡片標題（櫃檯級） ========== -->
+
+    <!--
+        🏷️ 卡片大標題
+        📍 使用位置：卡片區域的主要標題
+        🎯 例如：「本月預算」、「近期交易」
+    -->
     <style name="TextAppearance.CocoCoin.CardTitleLarge">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 卡片一般標題 -->
+    <!--
+        🏷️ 卡片一般標題
+        📍 使用位置：卡片內的次要標題
+        🎯 例如：「餐飲」、「交通」等分類標題
+    -->
     <style name="TextAppearance.CocoCoin.CardTitle">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 徽章文字 -->
+    <!-- ========== 🏷️ 徽章文字（名牌級） ========== -->
+
+    <!--
+        🏷️ 徽章文字
+        📍 使用位置：需要強調的小標籤
+        🎯 例如：「超支」、「已達標」、「熱門分類」
+        📝 橘褐色給人「注意！」的感覺
+    -->
     <style name="TextAppearance.CocoCoin.Badge">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#A65B34</item> <!-- 橘褐色 -->
+        <item name="android:textColor">#A65B34</item> <!-- 橘褐色：溫暖的警告色 -->
     </style>
 
-    <!-- 後設標籤（例如「建立於 2025-04-03」） -->
+    <!-- ========== 🕐 後設標籤（備註級） ========== -->
+
+    <!--
+        🏷️ 後設標籤（例如「建立於 2025-04-03」）
+        📍 使用位置：不重要的輔助資訊
+        🎯 例如：「最後更新：今天 14:30」、「共 3 筆交易」
+        📝 暖灰色讓它低調但不難看
+    -->
     <style name="TextAppearance.CocoCoin.MetaLabel">
         <item name="android:textSize">11sp</item>
-        <item name="android:textColor">#9A8F87</item> <!-- 暖灰色 -->
+        <item name="android:textColor">#9A8F87</item> <!-- 暖灰色：不搶鋒頭 -->
     </style>
 
-    <!-- 輔助說明文字 -->
+    <!-- ========== 💬 輔助說明文字（服務生級） ========== -->
+
+    <!--
+        🏷️ 輔助說明文字
+        📍 使用位置：輸入框的提示、說明文字
+        🎯 例如：「請輸入金額」、「選擇分類」
+    -->
     <style name="TextAppearance.CocoCoin.SupportText">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#8C8B97</item>
     </style>
 
-    <!--  內文 -->
+    <!-- ========== 📝 內文（一般員工級） ========== -->
+
+    <!--
+        🏷️ 內文
+        📍 使用位置：大多數的文字
+        🎯 例如：交易備註、分類名稱
+        📝 咖啡色（#5D5651）比純黑色更柔和，閱讀更舒服
+    -->
     <style name="TextAppearance.CocoCoin.Body">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#5D5651</item>
+        <item name="android:textColor">#5D5651</item> <!-- 咖啡色：溫暖柔和 -->
     </style>
 
-    <!-- 粗體內文 -->
+    <!--
+        🏷️ 粗體內文
+        📍 使用位置：需要強調的一般文字
+        🎯 例如：「總計」、「合計」、「注意事項」
+    -->
     <style name="TextAppearance.CocoCoin.BodyStrong">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#4C4642</item>
+        <item name="android:textColor">#4C4642</item> <!-- 深咖啡色 -->
     </style>
 
-    <!--  超級數字 -->
+    <!-- ========== 💰 數字指標（財務長級） ========== -->
+
+    <!--
+        🏷️ 超級數字（英雄級數字）
+        📍 使用位置：最重要的數字
+        🎯 例如：首頁的「本月結餘 NT$ 15,000」
+        📝 30sp 超大，一眼就看到！
+    -->
     <style name="TextAppearance.CocoCoin.MetricHero">
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 大數字指標 -->
+    <!--
+        🏷️ 大數字指標
+        📍 使用位置：次要的重要數字
+        🎯 例如：「本月收入」、「本月支出」
+    -->
     <style name="TextAppearance.CocoCoin.MetricLarge">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 中數字指標 -->
+    <!--
+        🏷️ 中數字指標
+        📍 使用位置：一般數字
+        🎯 例如：帳戶餘額、分類總金額
+    -->
     <style name="TextAppearance.CocoCoin.MetricMedium">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 按鈕文字 -->
+    <!-- ========== 🔘 按鈕文字（點擊級） ========== -->
+
+    <!--
+        🏷️ 按鈕文字
+        📍 使用位置：所有按鈕
+        🎯 例如：「儲存」、「取消」、「新增帳戶」
+
+        textAllCaps="false"：不強制全大寫（讓設計更現代）
+        letterSpacing="0.01"：微調字距，讓按鈕文字更有質感
+    -->
     <style name="TextAppearance.CocoCoin.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>      <!-- 不強制全大寫 -->
-        <item name="android:letterSpacing">0.01</item>    <!-- 微調字距 -->
+        <item name="android:letterSpacing">0.01</item>    <!-- 微調字距：增加一點呼吸感 -->
     </style>
 
-    <!-- 導覽列標籤 -->
+    <!-- ========== 🧭 導覽列標籤（導航員級） ========== -->
+
+    <!--
+        🏷️ 導覽列標籤
+        📍 使用位置：底部導覽列的五個按鈕
+        🎯 例如：「首頁」、「分析」、「記帳」、「資產」、「設定」
+    -->
     <style name="TextAppearance.CocoCoin.NavLabel">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
+        <!-- 沒設定顏色，讓按鈕自己的顏色邏輯決定 -->
     </style>
 
-    <!-- 列表項目標題 -->
+    <!-- ========== 📋 列表項目標題（清單級） ========== -->
+
+    <!--
+        🏷️ 列表項目標題
+        📍 使用位置：RecyclerView 的每個項目
+        🎯 例如：交易列表的「午餐」、「晚餐」、「薪水」
+    -->
     <style name="TextAppearance.CocoCoin.ListTitle">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#1E1E2A</item>
     </style>
 
-    <!-- 標籤文字（例如「飲食」「交通」分類） -->
+    <!-- =========️ 🏷️ 標籤文字（分類級） ========== -->
+
+    <!--
+        🏷️ 標籤文字（例如「餐飲」、「交通」分類）
+        📍 使用位置：分類標籤、過濾器
+        🎯 例如：「餐飲」、「交通」、「購物」
+    -->
     <style name="TextAppearance.CocoCoin.Tag">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
+        <!-- 顏色由程式碼動態設定（例如支出紅色、收入綠色） -->
     </style>
 
 </resources>

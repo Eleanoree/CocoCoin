@@ -1,27 +1,84 @@
-// Gradle 的「插件管理區塊」 決定要去哪裡找「施工工具（plugin）」
+// ============================================================
+// 🏗️ Gradle 設定檔 — 白話文：記帳 App 的「施工說明書」+「材料訂購單」
+// ============================================================
+//
+// 情境劇：想像你要蓋一棟房子（CocoCoin App）
+//         這個檔案就是「施工總計畫書」，它告訴工人們：
+//           1. 要去哪裡買施工工具（pluginManagement）
+//           2. 要去哪裡買建築材料（dependencyResolutionManagement）
+//           3. 這棟房子叫什麼名字（rootProject.name）
+//           4. 包含哪幾個樓層（include）
+//
+// Gradle 是什麼？白話文：Android 專案的「施工總指揮」
+//          它負責下載工具、管理材料、編譯程式碼、打包成 App
+// ============================================================
+
+// ============================================================
+// 📦 插件管理區塊 — 白話文：決定要去哪裡買「施工工具（plugin）」
+// ============================================================
+//
+// plugin 是什麼？白話文：像是電鑽、鋸子、扳手這些「開發工具」
+//   例如：Android Gradle Plugin（把程式碼變成 App 的工具）
+//         Kotlin Gradle Plugin（處理 Kotlin 語法的工具）
+//
+// 這個區塊告訴 Gradle：「要去哪裡買這些工具」
 pluginManagement {
     repositories {
-        google()                 // Google 官方工具倉庫（Android 核心工具）
-        mavenCentral()           // 主流開源工具倉庫（大部分 Java/Kotlin 套件）
-        gradlePluginPortal()     // Gradle 官方工具市集
+        google()                 // 🏢 Google 官方工具倉庫（Android 核心工具）
+        // 白話文：去 Google 的官方店買工具（品質有保證）
+
+        mavenCentral()           // 📦 主流開源工具倉庫（大部分 Java/Kotlin 套件）
+        // 白話文：去 Maven 中央大賣場買工具（什麼都有）
+
+        gradlePluginPortal()     // 🔧 Gradle 官方工具市集
+        // 白話文：去 Gradle 官方的專賣店買工具
     }
 }
 
-// 依賴解析管理：決定要去哪裡下載 App 需要用到的「材料（library）」
+// ============================================================
+// 🔗 依賴解析管理 — 白話文：決定要去哪裡下載 App 需要的「材料（library）」
+// ============================================================
+//
+// dependency 是什麼？白話文：像是水泥、鋼筋、磁磚這些「建築材料」
+//   例如：AndroidX（Google 的 UI 元件庫）
+//         Firebase（Google 的雲端服務）
+//         MPAndroidChart（畫圖表的套件）
+//
+// 這個區塊告訴 Gradle：「要去哪裡買這些材料」
 dependencyResolutionManagement {
-    // 設定「倉庫模式」：FAIL_ON_PROJECT_REPOS 意思是「不准各個子專案自己亂加倉庫」，避免版本衝突
+    // ============================================================
+    // ⚠️ 設定「倉庫模式」— 白話文：不准各個小包商自己亂買材料
+    // ============================================================
+    // FAIL_ON_PROJECT_REPOS：「如果哪個子專案自己亂加倉庫，就給他紅牌！」
+    // 為什麼要這樣？避免不同子專案從不同地方下載相同套件，造成版本衝突
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 
     repositories {
-        google()                // Google 的套件（AndroidX、Firebase 等）
-        mavenCentral()          // 大多數開源套件（如 Retrofit、OkHttp）
-        maven("https://jitpack.io")  // JitPack 倉庫：有些 GitHub 專案透過這裡發行
-        // 此 app 用到的 MPAndroidChart 圖表套件就在 JitPack 上
+        google()                // 🏢 Google 的材料行（AndroidX、Firebase 等）
+        // 白話文：Google 官方賣的材料，品質最好
+
+        mavenCentral()          // 📦 Maven 中央大賣場（大多數開源套件）
+        // 白話文：Retrofit、OkHttp、Coroutines 等等都在這裡
+
+        maven("https://jitpack.io")  // 🤖 JitPack 倉庫
+        // 白話文：有些 GitHub 上的專案懶得上架到 Maven Central
+        //        會透過 JitPack 這個「代購平台」來發行
+        //        MPAndroidChart（我們的圓餅圖、長條圖套件）就在這裡！
     }
 }
 
-// 專案名稱：
+// ============================================================
+// 🏷️ 專案名稱 — 白話文：這棟房子叫什麼名字？
+// ============================================================
+// rootProject.name 會在「專案視窗」顯示，也會影響匯出檔案的名稱
 rootProject.name = "CocoCoin"
+// 白話文：「各位觀眾，歡迎來到 CocoCoin 工地！」
 
-// 包含哪個模組：
+// ============================================================
+// 📁 包含哪個模組 — 白話文：這棟房子有哪幾個樓層？
+// ============================================================
+// 模組（module）是什麼？白話文：大樓的每一層
+//   - :app 是主樓層（App 本身）
+//   - 未來可能有 :library（共用元件庫）、:wear（手錶版）等
 include(":app")
+// 白話文：「這個工地要蓋 :app 這一層」（我們只需要手機 App）

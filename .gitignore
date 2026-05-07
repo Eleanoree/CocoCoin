@@ -16,3 +16,14 @@ local.properties
 app/google-services.json
 app/src/main/res/values/firebase_config.xml
 *.pptx
+app/build
+topic-arch-v5-redesign/node_modules
+topic-arch-v5-redesign/output
+topic-arch-v5-redesign/scratch
+docs/**/*.pdf
+docs/**/*.png
+docs/**/*.html
+docs/.DS_Store
+design/.DS_Store
+__pycache__/
+*.pyc

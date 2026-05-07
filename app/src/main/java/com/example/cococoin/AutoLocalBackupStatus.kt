@@ -1,10 +1,34 @@
+// ============================================================
+// 💾 自動本機備份的狀態 — 白話文：自動備份功能的「健康檢查報告」
+// ============================================================
+//
+// 情境劇：想像你設定了一個「自動備份」功能，App 會定時把你的資料
+//         備份到手機的某個資料夾（例如「Download/CocoCoin備份」）
+//
+// 這個 AutoLocalBackupStatus 就是記錄「自動備份功能現在怎麼樣」的報告：
+//   ✅ 有沒有設定資料夾？（isConfigured）
+//   📁 備份到哪個資料夾？（folderName）
+//   ⏰ 上次備份是什麼時候？（lastBackupAt）
+//   📝 上次備份結果如何？（lastMessage）
+//
+// 這張報告會在「設定頁面」顯示給使用者看
+// ============================================================
 package com.example.cococoin
 
-// 自動本機備份的狀態：
-// 記錄「自動備份到手機資料夾」功能的設定狀態
 data class AutoLocalBackupStatus(
-    val isConfigured: Boolean,   // 是否已設定備份資料夾？（true = 有設定，false = 沒設定）
-    val folderName: String?,     // 備份資料夾的名稱（例如「CocoCoin備份」）
-    val lastBackupAt: Long?,     // 上次備份的時間（毫秒，沒備份過就是 null）
-    val lastMessage: String      // 上次備份的結果訊息（例如「已自動更新本機備份」或「備份失敗」）
+    val isConfigured: Boolean,   // ✅ 是否已設定備份資料夾？
+    // true = 有設定，會自動備份
+    // false = 沒設定，不會自動備份
+
+    val folderName: String?,     // 📁 備份資料夾的名稱（例如「CocoCoin備份」）
+    // 白話文：這是哪個資料夾？沒設定的話就是 null
+
+    val lastBackupAt: Long?,     // ⏰ 上次備份的時間（毫秒，沒備份過就是 null）
+    // 白話文：上次是什麼時候備份的？
+
+    val lastMessage: String      // 📝 上次備份的結果訊息
+    // 白話文：備份結果怎麼樣？
+    // 成功時：「已自動更新本機備份」
+    // 失敗時：「備份失敗，請檢查儲存空間」
+    // 從未備份：「尚未進行本機備份」
 )

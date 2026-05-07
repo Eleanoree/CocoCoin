@@ -1,63 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    🏷️【分類管理列表項目】- item_manage_category.xml
+
+    想像你是「CocoCoin 分類管理員」，負責整理所有記帳標籤：
+
+    ┌─────────────────────────────────────────────────────────┐
+    │  🍽 餐飲                    [編輯]  [刪除]              │
+    │  🚗 交通                    [編輯]  [刪除]              │
+    │  🛒 購物                    [編輯]  [刪除]              │
+    │  💰 薪水                    [編輯]  [刪除]              │
+    │  🎁 紅包                    [編輯]  [刪除]              │
+    └─────────────────────────────────────────────────────────┘
+
+    每一列就是一個「分類卡片」，包含：
+    - 🖼️ 左邊：可愛的 emoji 圖示
+    - 📝 中間：分類名稱（餐飲、交通...）
+    - ✏️ 右邊：編輯按鈕（可以修改分類名稱或圖示）
+    - 🗑️ 最右邊：刪除按鈕（把這個分類移除）
+
+    使用位置：「設定」頁面 → 「管理分類」
+-->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
+
     android:background="@drawable/bg_analysis_section_list"
+
     android:gravity="center_vertical"
     android:minHeight="58dp"
     android:orientation="horizontal"
+
     android:paddingStart="12dp"
     android:paddingTop="10dp"
     android:paddingEnd="12dp"
     android:paddingBottom="10dp">
 
-    <TextView
-        android:id="@+id/tvManageCategoryIcon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:background="@drawable/bg_account_icon_badge"
-        android:gravity="center"
-        android:text="🍽"
-        android:textSize="16sp" />
+    <!--
+        ========== 🖼️ 左邊：分類圖示（emoji 圓形徽章） ==========
 
-    <TextView
-        android:id="@+id/tvManageCategoryName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_weight="1"
-        android:text="餐飲"
-        android:textColor="#2F2A27"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        這是一個圓形的背景，裡面放一個 emoji
+        例如：🍽（餐飲）、🚗（交通）、💰（薪水）
+    -->
+<TextView
+android:id="@+id/tvManageCategoryIcon"
+android:layout_width="34dp"
+android:layout_height="34dp"
+android:background="@drawable/bg_account_icon_badge"
+android:gravity="center"
+android:text="🍽"
+android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btnEditCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#DECECE"
-        android:text="編輯"
-        android:textAllCaps="false"
-        android:textColor="#8F6E56"
-        android:textSize="14sp"
-        tools:ignore="TouchTargetSizeCheck" />
+    <!--
+        ========== 📝 中間：分類名稱 ==========
 
-    <Button
-        android:id="@+id/btnDeleteCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:backgroundTint="@null"
-        android:text="刪除"
-        android:textAllCaps="false"
-        android:textColor="#A35A54"
-        android:textSize="14sp"
-        app:backgroundTint="#EFC8C8"
-        tools:ignore="TouchTargetSizeCheck" />
+        這是最重要的部分！顯示分類的名字
+        例如：「餐飲」、「交通」、「薪水」
 
-</LinearLayout>
+        layout_weight="1" 讓它吃掉所有剩餘的空間
+        這樣左右兩邊的按鈕會靠右，名稱永遠在中間偏左
+    -->
+<TextView
+android:id="@+id/tvManageCategoryName"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginStart="12dp"
+android:layout_weight="1"
+android:text="餐飲"
+android:textColor="#2F2A27"
+android:textSize="15sp"
+android:textStyle="bold" />
+
+    <!--
+        ========== ✏️ 右邊：編輯按鈕 ==========
+
+        點擊後會跳出「編輯分類」對話框
+        可以修改分類的名稱或圖示
+
+        背景是粉嫩色（#DECECE）
+        文字是咖啡色（#8F6E56）
+        沒有強制全大寫，更現代
+    -->
+<Button
+android:id="@+id/btnEditCategory"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:backgroundTint="#DECECE"
+android:text="編輯"
+android:textAllCaps="false"
+android:textColor="#8F6E56"
+android:textSize="14sp"
+tools:ignore="TouchTargetSizeCheck" />
+
+    <!--
+        ========== 🗑️ 最右邊：刪除按鈕 ==========
+
+        點擊後會跳出「確定刪除？」的確認視窗
+        確認後就把這個分類從系統中移除
+
+        背景是淺紅色（#EFC8C8）
+        文字是深紅色（#A35A54）
+        給人「警告！刪除有風險！」的感覺
+
+        layout_marginStart="6dp" 與左邊的編輯按鈕間隔 6dp
+    -->
+<Button
+android:id="@+id/btnDeleteCategory"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginStart="6dp"
+android:backgroundTint="@null"
+android:text="刪除"
+android:textAllCaps="false"
+android:textColor="#A35A54"
+android:textSize="14sp"
+app:backgroundTint="#EFC8C8"
+tools:ignore="TouchTargetSizeCheck" />
+
+    </LinearLayout>
+
+    <!--
+        📚【佈局小教室 - 為什麼這樣設計？】
+
+        1️⃣ 為什麼用 LinearLayout 而不是 ConstraintLayout？
+           因為這個項目很簡單（一條水平線），LinearLayout 就夠用了
+           不需要用更複雜的 ConstraintLayout
+
+        2️⃣ 為什麼用 layout_weight="1"？
+           讓名稱 TextView 佔滿剩餘空間，把兩個按鈕擠到右邊
+           這樣不管螢幕多寬，按鈕永遠靠右！
+
+        3️⃣ 為什麼編輯和刪除用 Button 而不是 TextView？
+           Button 自帶點擊效果（漣漪動畫）
+           而且語意更明確（使用者一看就知道可以點）
+
+        4️⃣ 為什麼刪除按鈕用淺紅色背景？
+           紅色給人「警告、危險」的感覺
+           使用者在點刪除前會多想一下，避免誤刪
+
+        5️⃣ 為什麼 textAllCaps="false"？
+           舊版 Android 按鈕文字會自動變大寫
+           現代設計趨勢是用原始大小寫（更友善）
+    -->
+
+    <!--
+        🎭【完整使用情境 - 劇場版】
+
+        場景：使用者想要把「餐飲」分類改成「美食」
+
+        第 1 幕：打開「設定」→「管理分類」
+            ↓
+        第 2 幕：看到分類列表
+            ├─ 🍽 餐飲  [編輯] [刪除]
+            ├─ 🚗 交通  [編輯] [刪除]
+            └─ 🛒 購物  [編輯] [刪除]
+            ↓
+        第 3 幕：點擊「餐飲」旁邊的「編輯」按鈕
+            ↓
+        第 4 幕：跳出編輯對話框
+            ├─ 名稱：[餐飲] → 改成「美食」
+            ├─ 圖示：[🍽] → 可以改
+            └─ [儲存]
+            ↓
+        第 5 幕：儲存成功，列表更新
+            └─ 🍽 美食  [編輯] [刪除]
+            ↓
+        第 6 幕：使用者回到首頁，所有「餐飲」的分類都變成「美食」了！✨
+    -->
+
+    <!--
+        💡【關於 tools:ignore 的小知識】
+
+        tools:ignore="TouchTargetSizeCheck"
+
+        這是 Android Studio 的「忽略警告」標記
+        TouchTargetSizeCheck 是說「按鈕觸控目標太小」
+
+        為什麼會警告？
+        Google 建議按鈕高度至少 48dp（比較好按）
+        但我們的按鈕高度是 wrap_content，可能小於 48dp
+
+        為什麼我們要忽略？
+        因為這個頁面是給「管理員」用的（不是主要功能）
+        而且真的會誤刪分類的情況很少
+        與其加大按鈕破壞設計，不如忽略警告～
+    -->
+
+    <!--
+        🌟【設計亮點總結】
+
+        1. 圓形圖示背景（bg_account_icon_badge）
+           美觀、統一、有辨識度
+
+        2. layout_weight 技巧
+           讓名稱佔滿空間，按鈕自動靠右
+
+        3. 顏色心理學
+           編輯：粉嫩色（溫柔）
+           刪除：紅色（警告）
+
+        4. 現代設計風格
+           不強制全大寫、圓角背景、適當間距
+
+        5. 觸控友善
+           最低高度 58dp，按鈕夠大夠好按
+    -->

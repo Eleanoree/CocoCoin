@@ -1,6 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    設定頁面：讓使用者管理帳本名稱、雲端同步、帳號安全、資料備份與匯出等功能
+<?xml version="1.0" encoding="utf-8"?><!--
+    ⚙️【設定頁面】- fragment_settings.xml
+
+    想像這是 CocoCoin 記帳 App 的「控制中心」或「總部辦公室」：
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │  ⚙️ 設定                                                    │
+    ├─────────────────────────────────────────────────────────────┤
+    │                                                              │
+    │  ┌────────────────────────────────────────────────────────┐ │
+    │  │ 📊 帳本概況                                              │ │
+    │  ├────────────────────────────────────────────────────────┤ │
+    │  │  ┌──────────────┐  ┌──────────────┐                   │ │
+    │  │  │ 帳本名稱 📝  │  │ 記帳筆數    │                   │ │
+    │  │  │ CocoCoin     │  │ 128 筆      │                   │ │
+    │  │  └──────────────┘  └──────────────┘                   │ │
+    │  └────────────────────────────────────────────────────────┘ │
+    │                                                              │
+    │  ┌────────────────────────────────────────────────────────┐ │
+    │  │ ☁️ 雲端狀態                                              │ │
+    │  ├────────────────────────────────────────────────────────┤ │
+    │  │  已綁定登入方式：尚未綁定                                │ │
+    │  │  最近同步：2026/04/07 14:30                            │ │
+    │  └────────────────────────────────────────────────────────┘ │
+    │                                                              │
+    │  ┌────────────────────────────────────────────────────────┐ │
+    │  │ 🔐 帳號安全                                              │ │
+    │  ├────────────────────────────────────────────────────────┤ │
+    │  │  [Google 登入]  [信箱登入]                              │ │
+    │  │  [升級帳號]  [登出目前帳號]  ...                        │ │
+    │  └────────────────────────────────────────────────────────┘ │
+    │                                                              │
+    │  ┌────────────────────────────────────────────────────────┐ │
+    │  │ 💾 資料管理                                              │ │
+    │  ├────────────────────────────────────────────────────────┤ │
+    │  │  分類管理、自動備份、匯出/匯入、清除資料...             │ │
+    │  └────────────────────────────────────────────────────────┘ │
+    │                                                              │
+    └─────────────────────────────────────────────────────────────┘
+
+    功能總覽：
+    1️⃣ 帳本概況：查看/修改帳本名稱、總記帳筆數
+    2️⃣ 雲端狀態：查看登入方式和同步時間
+    3️⃣ 帳號安全：Google/信箱登入、綁定/解除綁定、登出
+    4️⃣ 資料管理：分類管理、自動備份、匯出/匯入、清除資料
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -257,6 +299,52 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:id="@+id/layoutLoginEntryRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/btnGoogleSignInAction"
+                        style="@style/TextAppearance.CocoCoin.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_analysis_primary_button"
+                        android:backgroundTint="@null"
+                        android:drawableStart="@drawable/ic_login_google"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:text="Google 登入"
+                        android:textAllCaps="false"
+                        android:textColor="#FFF8F3"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@null" />
+
+                    <Button
+                        android:id="@+id/btnEmailSignInAction"
+                        style="@style/TextAppearance.CocoCoin.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_settings_button_secondary"
+                        android:backgroundTint="@null"
+                        android:drawableStart="@drawable/ic_login_email"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:text="信箱登入"
+                        android:textAllCaps="false"
+                        android:textColor="#6E564F"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@null" />
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/btnPrimaryAccountAction"
                     style="@style/TextAppearance.CocoCoin.Button"
@@ -265,6 +353,8 @@
                     android:layout_marginTop="14dp"
                     android:background="@drawable/bg_analysis_primary_button"
                     android:backgroundTint="@null"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
                     android:text="升級帳號"
                     android:textAllCaps="false"
                     android:textColor="#FFF8F3"
@@ -295,6 +385,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_settings_button_secondary"
                     android:backgroundTint="@null"
+                    android:drawableStart="@drawable/ic_login_email"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
                     android:text="綁定信箱"
                     android:textAllCaps="false"
                     android:textColor="#6E564F"

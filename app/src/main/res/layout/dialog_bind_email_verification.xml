@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ============================================================
+     📧 綁定信箱對話框佈局 — 白話文：信箱綁定的「彈出視窗設計圖」
+     ============================================================
+
+     情境劇：想像你在設定頁面點擊「綁定信箱」，然後跳出一個小視窗：
+
+       ╭─────────────────────────────────────────╮
+       │  ┌─────────────────────────────────┐   │
+       │  │ 信箱帳號                        │   │
+       │  │ user@example.com                │   │
+       │  └─────────────────────────────────┘   │
+       │                                         │
+       │  ┌─────────────────────────────────┐   │
+       │  │ 密碼                      👁️    │   │
+       │  │ ••••••••                       │   │
+       │  └─────────────────────────────────┘   │
+       │                                         │
+       │  ┌─────────────────────────────────┐   │
+       │  │ 再次輸入密碼                👁️  │   │
+       │  │ ••••••••                       │   │
+       │  └─────────────────────────────────┘   │
+       │                                         │
+       │         [ 綁定 ]   [ 取消 ]             │
+       ╰─────────────────────────────────────────╯
+
+     這個 XML 檔案就是那張「綁定表單」的設計圖！
+     使用者可以在這裡：
+       - 輸入要綁定的 Email 地址
+       - 輸入密碼（點擊眼睛可以切換顯示/隱藏）
+       - 再次輸入密碼確認（避免打錯）
+       - 點擊「綁定」完成綁定
+       - 點擊「取消」關閉視窗
+
+     為什麼要輸入兩次密碼？
+       避免使用者手殘打錯！第一次打錯可能沒發現，
+       第二次再打一次可以確認兩次一樣，降低「忘記密碼」的悲劇機率。
+     ============================================================
+-->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -87,29 +125,15 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnSendEmailCode"
-            style="@style/TextAppearance.CocoCoin.Button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_analysis_primary_button"
-            android:backgroundTint="@null"
-            android:text="寄送驗證信"
-            android:textAllCaps="false"
-            android:textColor="#FFF8F3"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:backgroundTint="@null" />
-
         <TextView
             android:id="@+id/tvEmailCodeHint"
             style="@style/TextAppearance.CocoCoin.SupportText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="寄出後請到信箱開啟驗證信，點擊信中的驗證連結後再回到 App。"
-            android:textColor="#8D8178"
-            android:textSize="13sp" />
+            android:layout_marginTop="16dp"
+            android:text=""
+            android:textColor="#C14B45"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

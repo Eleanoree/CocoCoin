@@ -23,6 +23,8 @@ topic-arch-v5-redesign/scratch
 docs/**/*.pdf
 docs/**/*.png
 docs/**/*.html
+!docs/readme-assets/
+!docs/readme-assets/*.png
 docs/.DS_Store
 design/.DS_Store
 __pycache__/
